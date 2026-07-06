@@ -24,7 +24,3 @@ def download_faiss_files():
         filename="index.pkl",
         local_dir="vectorstore/faiss_index"
     )
-
-    print(
-        "FAISS files downloaded successfully"
-    )
