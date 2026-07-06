@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Env
+venv/
+.env
+
+# Logs
+logs/
+*.log
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+vectorstore/faiss_index/
+*.faiss
+*.pkl
+vectorstore/faiss_index/
+*.faiss
+*.pkl
+*.parquet
+__pycache__/
+.env
+# Cache
+.cache/
+.pytest_cache/

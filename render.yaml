@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: indian-legal-copilot-api
+    runtime: docker
+
+    plan: free
+
+    healthCheckPath: /health
+
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+
+      - key: MODEL_NAME
+        value: llama-3.3-70b-versatile
+
+      - key: TOP_K
+        value: 10
