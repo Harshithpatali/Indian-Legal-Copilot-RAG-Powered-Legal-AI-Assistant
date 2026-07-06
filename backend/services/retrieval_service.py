@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+from functools import lru_cache
 import os
 
 from langchain_community.vectorstores import FAISS
@@ -14,6 +15,7 @@ from backend.download_index import (
 )
 
 
+@lru_cache(maxsize=1)
 def get_vectorstore():
 
     faiss_file = os.path.join(
@@ -37,12 +39,24 @@ def get_vectorstore():
 
         download_faiss_files()
 
+    print(
+        "Loading embeddings..."
+    )
+
     embeddings = get_embeddings()
+
+    print(
+        "Loading FAISS index..."
+    )
 
     vectorstore = FAISS.load_local(
         settings.FAISS_INDEX_PATH,
         embeddings,
         allow_dangerous_deserialization=True
+    )
+
+    print(
+        "FAISS index loaded successfully."
     )
 
     return vectorstore
@@ -121,10 +135,6 @@ def retrieve_filtered_context(
     k: int = 10,
     confidence_threshold: float = 0.25
 ):
-    """
-    Remove weak matches
-    """
-
     results = retrieve_with_scores(
         query=query,
         k=k

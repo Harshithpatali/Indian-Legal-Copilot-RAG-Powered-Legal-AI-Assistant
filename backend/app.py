@@ -3,9 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.models.request_models import QuestionRequest
 from backend.rag import ask_legal_question
+
 from backend.download_index import download_faiss_files
+from backend.config import settings
 
 import os
+import traceback
 
 
 app = FastAPI(
@@ -14,7 +17,6 @@ app = FastAPI(
 )
 
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -50,6 +52,7 @@ def startup_event():
         )
 
         try:
+
             download_faiss_files()
 
             print(
@@ -87,13 +90,49 @@ def health():
     }
 
 
+@app.get("/env-test")
+def env_test():
+
+    return {
+        "groq_exists": bool(
+            settings.GROQ_API_KEY
+        ),
+        "model": settings.MODEL_NAME,
+        "embedding": settings.EMBEDDING_MODEL,
+        "faiss_path": settings.FAISS_INDEX_PATH
+    }
+
+
 @app.post("/ask")
 def ask(
     request: QuestionRequest
 ):
 
-    result = ask_legal_question(
-        request.question
-    )
+    try:
 
-    return result
+        print("=" * 60)
+        print(
+            "QUESTION:",
+            request.question
+        )
+
+        result = ask_legal_question(
+            request.question
+        )
+
+        print(
+            "QUESTION COMPLETED"
+        )
+
+        return result
+
+    except Exception:
+
+        error_trace = traceback.format_exc()
+
+        print(error_trace)
+
+        return {
+            "error": "Internal Error",
+            "traceback": error_trace
+        }
