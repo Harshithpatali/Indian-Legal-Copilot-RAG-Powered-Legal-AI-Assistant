@@ -22,103 +22,18 @@ def load_prompt():
         return f.read()
 
 
-def ask_legal_question(
-    question: str
-):
+def ask_legal_question(question: str):
+
+    print("STEP 1")
+
     retrieved = retrieve_filtered_context(
         query=question,
         k=10
     )
 
-    if not retrieved:
-        return {
-            "answer": "No relevant legal information was found.",
-            "confidence_score": 0.0,
-            "sources": []
-        }
-
-    context_chunks = []
-    source_list = []
-    confidence_scores = []
-
-    for item in retrieved:
-
-        score = float(
-            item.get(
-                "score",
-                0.0
-            )
-        )
-
-        confidence = float(
-            item.get(
-                "confidence",
-                0.0
-            )
-        )
-
-        confidence_scores.append(
-            confidence
-        )
-
-        doc = item["document"]
-
-        context_chunks.append(
-            str(
-                doc.page_content
-            )
-        )
-
-        source_list.append(
-            {
-                "question": str(
-                    doc.metadata.get(
-                        "question",
-                        ""
-                    )
-                ),
-                "score": score,
-                "confidence": confidence,
-                "content": str(
-                    doc.page_content[:500]
-                )
-            }
-        )
-
-    context = "\n\n".join(
-        context_chunks
-    )
-
-    prompt = (
-        load_prompt()
-        .replace(
-            "{context}",
-            context
-        )
-        .replace(
-            "{question}",
-            question
-        )
-    )
-
-    llm = get_llm()
-
-    response = llm.invoke(
-        prompt
-    )
-
-    final_confidence = float(
-        round(
-            sum(confidence_scores)
-            / len(confidence_scores),
-            3
-        )
-    )
+    print("STEP 2")
 
     return {
-        "answer": str(
-            response.content
-        ),
-        "confidence_score": final_confidence,
-        "sources": source_list
+        "answer": "retrieval works",
+        "retrieved_count": len(retrieved)
     }

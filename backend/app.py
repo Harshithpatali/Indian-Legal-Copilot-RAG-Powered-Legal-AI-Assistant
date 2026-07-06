@@ -25,6 +25,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/ping")
+def ping():
+    print("PING HIT")
+    return {"status": "ok"}
+
+
 
 @app.on_event("startup")
 def startup_event():
