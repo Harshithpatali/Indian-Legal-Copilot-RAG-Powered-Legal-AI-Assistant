@@ -1,6 +1,7 @@
 services:
   - type: web
     name: indian-legal-copilot-api
+
     runtime: docker
 
     plan: free
@@ -14,5 +15,11 @@ services:
       - key: MODEL_NAME
         value: llama-3.3-70b-versatile
 
+      - key: EMBEDDING_MODEL
+        value: sentence-transformers/all-MiniLM-L6-v2
+
       - key: TOP_K
         value: 10
+
+      - key: FAISS_INDEX_PATH
+        value: vectorstore/faiss_index

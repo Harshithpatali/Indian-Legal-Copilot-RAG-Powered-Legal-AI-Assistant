@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.models.request_models import QuestionRequest
 from backend.rag import ask_legal_question
-
 from backend.download_index import download_faiss_files
 
 import os
@@ -50,12 +49,23 @@ def startup_event():
             "Downloading FAISS files from Hugging Face..."
         )
 
-        download_faiss_files()
+        try:
+            download_faiss_files()
 
-        print(
-            "FAISS download completed."
-        )
+            print(
+                "FAISS download completed."
+            )
+
+        except Exception as e:
+
+            print(
+                f"FAISS download failed: {e}"
+            )
+
+            raise
+
     else:
+
         print(
             "FAISS files already exist."
         )
