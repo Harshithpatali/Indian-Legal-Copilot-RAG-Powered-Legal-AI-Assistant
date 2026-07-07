@@ -1,4 +1,3 @@
-from typing import List, Dict, Any
 from functools import lru_cache
 import os
 
@@ -66,10 +65,6 @@ def retrieve_context(
     query: str,
     k: int = 10
 ):
-    """
-    MMR Retrieval
-    Used by production RAG
-    """
 
     vectorstore = get_vectorstore()
 
@@ -135,6 +130,7 @@ def retrieve_filtered_context(
     k: int = 10,
     confidence_threshold: float = 0.25
 ):
+
     results = retrieve_with_scores(
         query=query,
         k=k

@@ -1,13 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.models.request_models import QuestionRequest
-from backend.rag import ask_legal_question
+from backend.models.request_models import (
+    QuestionRequest
+)
 
-from backend.download_index import download_faiss_files
-from backend.config import settings
+from backend.rag import (
+    ask_legal_question
+)
 
-import os
+from backend.config import (
+    settings
+)
+
 import traceback
 
 
@@ -25,59 +30,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/ping")
-def ping():
-    print("PING HIT")
-    return {"status": "ok"}
-
-
 
 @app.on_event("startup")
 def startup_event():
 
-    os.makedirs(
-        "vectorstore/faiss_index",
-        exist_ok=True
+    print(
+        "Application startup complete."
     )
-
-    faiss_file = (
-        "vectorstore/faiss_index/index.faiss"
-    )
-
-    pkl_file = (
-        "vectorstore/faiss_index/index.pkl"
-    )
-
-    if (
-        not os.path.exists(faiss_file)
-        or
-        not os.path.exists(pkl_file)
-    ):
-        print(
-            "Downloading FAISS files from Hugging Face..."
-        )
-
-        try:
-
-            download_faiss_files()
-
-            print(
-                "FAISS download completed."
-            )
-
-        except Exception as e:
-
-            print(
-                f"FAISS download failed: {e}"
-            )
-
-            raise
-
-    else:
-
-        print(
-            "FAISS files already exist."
-        )
 
 
 @app.get("/")
@@ -93,6 +52,18 @@ def health():
 
     return {
         "status": "healthy"
+    }
+
+
+@app.get("/ping")
+def ping():
+
+    print(
+        "PING HIT"
+    )
+
+    return {
+        "status": "ok"
     }
 
 
@@ -118,8 +89,7 @@ def ask(
 
         print("=" * 60)
         print(
-            "QUESTION:",
-            request.question
+            f"QUESTION: {request.question}"
         )
 
         result = ask_legal_question(
