@@ -77,7 +77,20 @@ def env_test():
         "faiss_path": settings.FAISS_INDEX_PATH
     }
 
+@app.get("/model-test")
+def model_test():
 
+    from sentence_transformers import SentenceTransformer
+
+    print("MODEL TEST STARTED", flush=True)
+
+    model = SentenceTransformer(
+        "sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    print("MODEL TEST SUCCESS", flush=True)
+
+    return {"status": "ok"}
 @app.get("/embedding-test")
 def embedding_test():
 
