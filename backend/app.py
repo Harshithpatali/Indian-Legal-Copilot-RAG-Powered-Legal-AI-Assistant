@@ -58,9 +58,7 @@ def health():
 @app.get("/ping")
 def ping():
 
-    print(
-        "PING HIT"
-    )
+    print("PING HIT")
 
     return {
         "status": "ok"
@@ -78,6 +76,70 @@ def env_test():
         "embedding": settings.EMBEDDING_MODEL,
         "faiss_path": settings.FAISS_INDEX_PATH
     }
+
+
+@app.get("/embedding-test")
+def embedding_test():
+
+    try:
+
+        print("=" * 60)
+        print("EMBEDDING TEST STARTED")
+
+        from backend.services.embedding_service import (
+            get_embeddings
+        )
+
+        embeddings = get_embeddings()
+
+        print("EMBEDDING MODEL LOADED")
+
+        return {
+            "status": "embedding loaded successfully"
+        }
+
+    except Exception:
+
+        error_trace = traceback.format_exc()
+
+        print(error_trace)
+
+        return {
+            "error": "Embedding Test Failed",
+            "traceback": error_trace
+        }
+
+
+@app.get("/faiss-test")
+def faiss_test():
+
+    try:
+
+        print("=" * 60)
+        print("FAISS TEST STARTED")
+
+        from backend.services.retrieval_service import (
+            get_vectorstore
+        )
+
+        vectorstore = get_vectorstore()
+
+        print("FAISS LOADED SUCCESSFULLY")
+
+        return {
+            "status": "faiss loaded successfully"
+        }
+
+    except Exception:
+
+        error_trace = traceback.format_exc()
+
+        print(error_trace)
+
+        return {
+            "error": "FAISS Test Failed",
+            "traceback": error_trace
+        }
 
 
 @app.post("/ask")
